@@ -1,0 +1,54 @@
+# -------------------------
+# Python ignores
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.so
+*.dll
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# -------------------------
+# Logs + runtime artifacts
+# -------------------------
+emitter_logs/*
+!emitter_logs/.gitkeep   # keep the folder but ignore its contents
+
+*.log
+
+# Local roster files (don’t version live production rosters)
+series3_roster.csv
+series3_roster*.csv
+roster.csv
+
+# -------------------------
+# System / Editor files
+# -------------------------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Backup files
+*.bak
+*.tmp
