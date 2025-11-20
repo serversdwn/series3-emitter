@@ -28,6 +28,7 @@ import csv
 import time
 import configparser
 import urllib.request
+import requests
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, Optional, Tuple, Set, List
 
@@ -273,6 +274,21 @@ def refresh_roster_from_url(url: str, dest: str, min_seconds: int,
 def cfg_get(cfg: dict, key: str, default=None):
     return cfg.get(key, cfg.get(key.lower(), cfg.get(key.upper(), default)))
 
+#---Report to server ---
+def report_to_server(server_url: str, uid: str, info: dict, status: str):
+    payload = {
+        "unit": uid,
+        "unit_type": "series3",
+        "timestamp": fmt_last(info["mtime"]),
+        "file": info["fname"],
+        "status": status
+    }
+    try:
+        requests.post(server_url, json=payload, timeout=5)
+    except Exception as e:
+        print(f"[WARN] report_to_server failed for {uid}: {e}")
+
+
 # --------------- Main loop ------------------
 def main() -> None:
     here = os.path.dirname(__file__) or "."
@@ -408,6 +424,8 @@ def main() -> None:
                     line = "{col}{uid:<8} Missing   Age:  N/A    Last: ---{note}{rst}".format(col=C_MIS, uid=uid, note=note_suffix, rst=C_RST)
                 print(line)
                 log_message(LOG_FILE, ENABLE_LOGGING, line)
+                if info is not None:
+                    report_to_server(cfg["API_URL"], uid, info, status)
 
             # Bench Units (rostered but not active in field)
             print("\nBench Units (rostered, not active):")
